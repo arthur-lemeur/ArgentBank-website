@@ -33,6 +33,7 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
+
   /user/signup:
     post:
       tags:
@@ -57,6 +58,7 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
+
   /user/profile:
     post:
       security:
@@ -65,11 +67,9 @@ paths:
         - User Module
       summary: User Profile API
       description: API for fetching a user profile
-      #produces:
-       # - application/json
       responses:
         '200':
-          description: User profile retrieved successully
+          description: User profile retrieved successfully
           schema:
             $ref: '#/definitions/ApiResponse'
         '400':
@@ -94,19 +94,165 @@ paths:
         - application/json
       responses:
         '200':
-          description: User profile retrieved successully
+          description: User profile retrieved successfully
           schema:
             $ref: '#/definitions/ApiResponse'
         '400':
           description: Invalid Fields
         '500':
           description: Internal Server Error
+
+  /accounts:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - User Module
+      summary: User Account API
+      description: API for fetching a user accounts
+      parameters:
+        - in: query
+          name: token
+          description: token
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Account informations retrieved Successfully
+          schema:
+            $ref: '#/definitions/AccountResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+
+  /accounts/transactions:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - User Module
+      summary: User Transaction API
+      description: API for fetching a user transaction details
+      parameters:
+        - in: query
+          name: id
+          description: Account ID
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User transaction retrieved successfully
+          schema:
+            $ref: '#/definitions/TransactionsResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+
+  /accounts/transactions/{year}/{month}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - User Module
+      summary: User Transaction API by date
+      description: API for fetching a user transactions from specific date
+      parameters:
+        - in: query
+          name: id
+          description: Account ID
+          required: true
+          type: integer
+        - in: query
+          name: year
+          description: year
+          required: true
+          type: integer
+        - in: query
+          name: month
+          description: month
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User transaction retrieved successfully
+          schema:
+            $ref: '#/definitions/TransactionsResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+
+  /accounts/transactions/{id}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - User Module
+      summary: User Transaction API
+      description: API for fetching a user transaction details
+      parameters:
+        - in: query
+          name: id
+          description: Transaction ID
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User transaction retrieved successfully
+          schema:
+            $ref: '#/definitions/TransactionResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+    patch:
+      security:
+        - Bearer: []
+      tags:
+        - User Module
+      summary: User Transaction API
+      description: API for updating a user transaction details
+      parameters:
+        - in: query
+          name: id
+          description: Transaction ID
+          required: true
+          type: integer
+        - in: body
+          name: body
+          description: Update user transaction attributes
+          schema:
+            $ref: '#/definitions/UserTransaction'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User transaction retrieved successfully
+          schema:
+            $ref: '#/definitions/TransactionResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+
 securityDefinitions:
   Bearer:
     type: apiKey
     name: Authorization
     in: header
+
 definitions:
+
   User:
     properties:
       email:
@@ -124,6 +270,7 @@ definitions:
       userName:
         type: string
         description: user public name
+
   Login:
     properties:
       email:
@@ -132,6 +279,12 @@ definitions:
       password:
         type: string
         description: user password
+
+  Account:
+    properties:
+      id:
+        type: string
+
   ApiResponse:
     type: object
     properties:
@@ -146,13 +299,101 @@ definitions:
             type: string
           email:
             type: string
+
   LoginResponse:
     type: object
     properties:
       token:
         type: string
+
+  AccountResponse:
+    type: object
+    properties:
+      body:
+        type: array
+        items:
+          $ref: "#/definitions/AccountModel"
+  AccountModel:
+    type: object
+    properties:
+      id:
+        type: string
+      balance:
+        type: integer
+      name:
+        type: string
+
+  TransactionsResponse:
+    type: array
+    items:
+      $ref: "#/definitions/TransactionsModel"
+  TransactionsModel:
+    type: object
+    properties:
+      id:
+        type: string
+      account:
+        type: string
+      date:
+        type: string
+      title:
+        type: string
+      description:
+        type: object
+        properties:
+          type:
+            type: string
+          category:
+            type: string
+          note:
+            type: string
+      amount:
+        type: integer
+
+  TransactionResponse:
+    type: object
+    properties:
+      body:
+        type: object
+        properties:
+          id:
+            type: string
+          account:
+            type: string
+          date:
+            type: string
+          title:
+            type: string
+          description:
+            type: object
+            properties:
+              type:
+                type: string
+              category:
+                type: string
+              note:
+                type: string
+          amount:
+            type: integer
+
   UserProfile:
     type: object
     properties:
       userName:
+        type: string
+
+  UserAccount:
+    type: object
+    properties:
+      id:
+        type: string
+
+  UserTransaction:
+    type: object
+    properties:
+      id:
+        type: string
+      category:
+        type: string
+      note:
         type: string
