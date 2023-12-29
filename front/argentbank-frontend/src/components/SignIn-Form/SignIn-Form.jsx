@@ -73,11 +73,11 @@ const SignInForm = () => {
             <form action="http://localhost:3001/api/v1/user/login" id="login-form" method="POST" onSubmit={handleSubmit}>
                 <div className="input-wrapper">
                     <label htmlFor="email">Email</label
-                    ><input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                    ><input type="email" id="email" defaultValue={email} onChange={(e) => setEmail(e.target.value)}/>
                 </div>
                 <div className="input-wrapper">
                     <label htmlFor="password">Password</label
-                    ><input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                    ><input type="password" id="password" defaultValue={password} onChange={(e) => setPassword(e.target.value)}/>
                 </div>
                 <div className="input-remember">
                     <input type="checkbox" id="remember-me"/><label htmlFor="remember-me"

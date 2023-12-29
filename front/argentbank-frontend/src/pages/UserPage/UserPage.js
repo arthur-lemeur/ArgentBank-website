@@ -1,8 +1,9 @@
 import Layout from "../../components/Layout/Layout";
 import Account from "../../components/Account/Account";
 import {useSelector} from "react-redux";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import EditUser from "../../components/EditUser/EditUser";
+import {useNavigate} from "react-router-dom";
 
 const accountTable = [
     {
@@ -28,6 +29,15 @@ const accountTable = [
 const UserPage = () => {
     const userData = useSelector((state) => state.user);
     const [editUser, setEditUser] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!userData || !userData.firstName || !userData.lastName) {
+            localStorage.clear();
+            navigate("/sign-in");
+        }
+    }, [userData, navigate]);
+
     return (
         <Layout>
             <main className={editUser ? "" : "main bg-dark"}>

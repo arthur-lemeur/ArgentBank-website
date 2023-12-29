@@ -7,6 +7,7 @@ const Header = () => {
     const userData = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const token = localStorage.getItem("token");
 
     const signOut = () => {
         localStorage.clear()
@@ -25,7 +26,7 @@ const Header = () => {
                 <h1 className="sr-only">Argent Bank</h1>
             </Link>
             <div>
-                {userData ?
+                {(userData && token) ?
                     <div>
                         <Link className="main-nav-item" to="/user">
                             <i className="fa fa-user-circle"></i>
